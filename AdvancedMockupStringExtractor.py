@@ -163,12 +163,12 @@ class AdvancedMockupStringExtractor():
                 if txt.text == text:
                     logging.error("\n\n#############################\nDouble entry:: %s\n\tControlId: %s\n\tText: %s<-> %s", input_file, control_id, text, txt.text)
                     if txt.filename != input_file:
-                        logging.error("\n\tFile: %s\n\tControlId: %s\n\tText: %s <-> %s", txt.filename, txt.id, txt.text, text)
+                        logging.error("\n\tFile: %s\n\tControlId: %s\n\tText: %s <-> %s", txt.filename, txt.identifier, txt.text, text)
                     continue
                 else:
                     logging.error("\n\n#############################\nSame ControlId with different text:\n\tFile: %s\n\tControlId: %s\n\tText: %s<-> %s", input_file, control_id, text, txt.text)
                     if txt.filename != input_file:
-                        logging.error("\n\tFile: %s\n\tControlId: %s\n\tText: %s <-> %s", txt.filename, txt.id, txt.text, text)
+                        logging.error("\n\tFile: %s\n\tControlId: %s\n\tText: %s <-> %s", txt.filename, txt.identifier, txt.text, text)
                     continue
 
 
