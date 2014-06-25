@@ -1,0 +1,10 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="192" measuredH="42" mockupW="132" mockupH="22">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::RadioButton" x="60" y="20" w="-1" h="-1" measuredW="132" measuredH="22" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <customID>firstElement</customID>
+        <text>Text%20in%20RadioButton</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>
