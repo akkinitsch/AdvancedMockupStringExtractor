@@ -78,17 +78,24 @@ class OutputExporter:
             self.texts.sort()
             for text in self.texts[:-1]:
                 outputfile.write('\t\"%s\":\"%s\",\n' %(text.identifier, self.string_to_json_value(text.text)))
-            outputfile.write('\t\"%s\":\"%s\"\n' %(self.texts[-1].identifier, self.string_to_json_value(self.texts[-1].text)))
+            try:
+                outputfile.write('\t\"%s\":\"%s\"\n' %(self.texts[-1].identifier, self.string_to_json_value(self.texts[-1].text)))
+            except IndexError:
+                pass #no texts in self.texts
         else:
             for text in self.texts[:-1]:
                 try:
                     outputfile.write('\"%s\":\"%s\",' %(text.identifier, self.string_to_json_value(text.text)))
                 except AttributeError:
                     logging.error(text.text)
+                except IndexError:
+                    pass #no texts in self.texts
             try:
                 outputfile.write('\"%s\":\"%s\"' %(self.texts[-1].identifier, self.string_to_json_value(self.texts[-1].text)))
             except AttributeError:
                 logging.error("Error in last element: %s", self.string_to_json_value(text.text))
+            except IndexError:
+                    pass #no texts in self.texts
         outputfile.write("}")
         outputfile.close()
 

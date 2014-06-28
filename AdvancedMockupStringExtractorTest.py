@@ -81,6 +81,15 @@ class AdvancedMockupStringExtractorTest(unittest.TestCase):
         wantedResult = 'Text before%0A<ul><li>item1</li><li>item2</li><li>item3</li></ul>'
         self.assertEqual(result, wantedResult)
 
+    def testExtractRadioButtonText(self):
+        self.extractor.extract_text('./test_input/RadioButton01.bmml')
+        extractedText = None
+        for textElement in self.extractor.texts:
+            if textElement.identifier == "firstElement":
+                extractedText = textElement.text
+        self.assertEqual(extractedText, "Text%20in%20RadioButton")
+
+
 if __name__ == '__main__':
     TESTSUITE = unittest.TestLoader().loadTestsFromTestCase(AdvancedMockupStringExtractorTest)
     unittest.TextTestRunner(verbosity=1).run(TESTSUITE)

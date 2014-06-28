@@ -28,6 +28,8 @@ THE SOFTWARE.
 into XML-files that can be used as input for translation-memory-systems.
 """
 
+__version__ = "1.0.0"
+
 import argparse
 import glob
 import logging
@@ -317,9 +319,13 @@ if __name__ == "__main__":
     PARSER.add_argument('--json', help='write output in json-format instead of xml-format.', action='store_true')
     PARSER.add_argument('-min', '--minified', help='remove whitespaces from generated output.', action='store_true')
     PARSER.add_argument('-o', '--output', help='name of file that will contain the generated output.')
-    PARSER.add_argument('-v', '--verbose', help='increase output verbosity.', action='store_true')
+    PARSER.add_argument('-v', '--version', help='show version number.', action='store_true')
+    PARSER.add_argument('--verbose', help='increase output verbosity.', action='store_true')
 
     ARGUMENTS = PARSER.parse_args()
+    if ARGUMENTS.version:
+        print 'AdvancedMockupStringExtractor V', __version__
+        sys.exit(0)
     if not ARGUMENTS.output and not ARGUMENTS.check:
         logging.error('You have to give the name of the output-file there the generated data will be stored in.')
         sys.exit(-1)
