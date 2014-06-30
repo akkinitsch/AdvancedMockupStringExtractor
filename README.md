@@ -28,8 +28,10 @@ mockups during implementation (of course in source language only).
 
 ##Preperating the mockups
 
+###Identifier of mockup-elements
+
 Via the context menu of each element in Balsamiq Mockups you can edit the
-*Custom Control Properties* of each element in a mockup. The property
+*Custom Control Propertie* of each element in a mockup. The property
 *Custom control ID* will be used as an identifier for each element.
 
 Every element needs to have an unique name in this property. If you want
@@ -40,6 +42,13 @@ with the Custom control ID "ignore".
 If you have to change the content of an element that appears more than
 once in all mockups, make sure to change all (or at least the first) appearance
 of this element.
+
+###(Meta-)Information for translators
+Via the context menu of each element in Balsamiq Mockups you can edit the
+*Custom Data Property* of each element in a mockup. The property
+*Custom Data* will be used for generating metainformation for the translator in
+the exported XML-file. Use this field to give additional information to the
+translator that can be useful for his work.
 
 ##Extracting texts from mockups
 
