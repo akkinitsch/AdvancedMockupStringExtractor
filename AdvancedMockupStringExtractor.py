@@ -274,7 +274,7 @@ class AdvancedMockupStringExtractor():
         """
         result = ""
         try:
-            result = text.replace("%0A", "breakNewLine") #prevend newlines from beeing unquoted
+            result = text.replace("%0A", "<br />") #prevend newlines from beeing unquoted
             result = self.remove_multiple_whitespaces(result)
             result = result.replace("breakNewLine", ' <br />')
             result = result.replace("<br /> ", "<br />")
