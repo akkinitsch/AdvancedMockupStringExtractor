@@ -28,7 +28,7 @@ THE SOFTWARE.
 into XML-files that can be used as input for translation-memory-systems.
 """
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 import argparse
 import glob
@@ -47,7 +47,7 @@ logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.WARNING)
 class AdvancedMockupStringExtractor():
     """Class handling the extracting-process of text from Mockup-files."""
 
-    controlElementsWithText = ["com.balsamiq.mockups::Label", "com.balsamiq.mockups::Paragraph", "com.balsamiq.mockups::TextArea", "com.balsamiq.mockups::SubTitle", "com.balsamiq.mockups::Button", "com.balsamiq.mockups::Accordion", "com.balsamiq.mockups::Tooltip", "com.balsamiq.mockups::IconLabel", "com.balsamiq.mockups::ComboBox", "com.balsamiq.mockups::ButtonBar", "com.balsamiq.mockups::CheckBox", "com.balsamiq.mockups::Link"]
+    controlElementsWithText = ["com.balsamiq.mockups::Label", "com.balsamiq.mockups::Paragraph", "com.balsamiq.mockups::TextArea", "com.balsamiq.mockups::TextInput", "com.balsamiq.mockups::SubTitle", "com.balsamiq.mockups::Button", "com.balsamiq.mockups::Accordion", "com.balsamiq.mockups::Tooltip", "com.balsamiq.mockups::IconLabel", "com.balsamiq.mockups::ComboBox", "com.balsamiq.mockups::ButtonBar", "com.balsamiq.mockups::CheckBox", "com.balsamiq.mockups::Link"]
     # pylint: disable-msg=W0105
     """List of names of mockup-elements containing text."""
 
@@ -240,7 +240,7 @@ class AdvancedMockupStringExtractor():
         The appended elements will have an index to be able to distinguish the elements of the buttonbar and to
         know the order they are contained in the buttonbar.
         """
-        self.get_text_from_combined_element(element, input_file, ',')
+        self.get_text_from_combined_element(element, input_file, '%2C')
 
     def extract_text_from_combobox(self, element, input_file):
         """Extracts texts from combobox-elements and append them to self.texts.
@@ -288,11 +288,11 @@ class AdvancedMockupStringExtractor():
 
     def substitute_bold(self, text):
         """Return text where markdown-markup for bold text (with two asterixes) is replaced with html-markup for bold text."""
-        return re.sub(r'\*(.*?)\*', r'<b>\1</b >', text)
+        return re.sub(r'\*(.*?)\*', r'<b>\1</b>', text)
 
     def substitute_italic(self, text):
         """Return text where markdown-markup for italic text (with two underscores) is replaced with html-markup for italic text."""
-        return re.sub(r'_(.*?)_', r'<i>\1</i >', text)
+        return re.sub(r'_(.*?)_', r'<i>\1</i>', text)
 
     def remove_multiple_whitespaces(self, text):
         """Return text where multiple whitespaces are replaced with only one whitespace."""

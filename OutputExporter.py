@@ -36,9 +36,10 @@ class OutputExporter:
     """ Class that manages writing the results from MockupStringExtractors to output-files in JSON or XML-format.
     """
 
-    def __init__(self, texts):
+    def __init__(self, texts, encoding='ISO-8859-1'):
         """ Get texts that should be exported at init-time"""
         self.texts = texts
+        self.output_encoding = encoding
 
     def unescape_html(self, text):
         """ Unescape HTML-encoding and special characters from html-formated text in mockups.
@@ -95,7 +96,7 @@ class OutputExporter:
             except AttributeError:
                 logging.error("Error in last element: %s", self.string_to_json_value(text.text))
             except IndexError:
-                    pass #no texts in self.texts
+                pass #no texts in self.texts
         outputfile.write("}")
         outputfile.close()
 
@@ -129,7 +130,7 @@ class OutputExporter:
         logging.info("Writing XML-export to file " + output_file)
         outputfile = open(output_file, "w")
         if minified:
-            outputfile.write(self.unescape_html(etree.tostring(root, pretty_print=False).encode('utf8')))
+            outputfile.write(self.unescape_html(etree.tostring(root, pretty_print=False, xml_declaration=True, encoding=self.output_encoding).encode('utf8')))
         else:
-            outputfile.write(self.unescape_html(etree.tostring(root, pretty_print=True).encode('utf8')))
+            outputfile.write(self.unescape_html(etree.tostring(root, pretty_print=True, xml_declaration=True, encoding=self.output_encoding).encode('utf8')))
         outputfile.close()
