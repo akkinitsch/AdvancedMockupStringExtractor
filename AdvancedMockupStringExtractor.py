@@ -28,7 +28,7 @@ THE SOFTWARE.
 into XML-files that can be used as input for translation-memory-systems.
 """
 
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 
 import argparse
 import glob
@@ -41,6 +41,7 @@ from lxml import etree
 
 from OutputExporter import OutputExporter
 from TextElement import TextElement
+from TextFormatFixer import TextFormatFixer
 
 logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.WARNING)
 
@@ -63,7 +64,8 @@ class AdvancedMockupStringExtractor():
     listItemPattern = re.compile('\*%20[a-zA-z0-9 ]*(%0A){0,1}')
     """Pattern of regular expression that will be used to determine if a text containes list-items."""
 
-    def __init__(self, input_file=None):
+
+    def __init__(self, input_file=None, fake=None):
         """ Constructor.
             If input_file is given, only this file will be parsed. Otherwise all bmml-files in directory and subdirectories
             will be parsed.
@@ -71,6 +73,7 @@ class AdvancedMockupStringExtractor():
             @param input_file: file that should be parsed (default None)
         """
         self.input_file = input_file
+        self.faketranslation = fake
         if input_file:
             try:
                 self.extract_text(input_file)
@@ -129,7 +132,8 @@ class AdvancedMockupStringExtractor():
             Keyword arguments:
             @param control_properties: properties of an element.
         """
-        return self.substitute_formatingchars(self.get_control_property(control_properties, 'text'))
+        result = self.substitute_formatingchars(self.get_control_property(control_properties, 'text'))
+        return TextFormatFixer.fix_text(result)
 
     def get_metainformation(self, control_properties):
         """ Return the metainformation contained in an element.
@@ -197,7 +201,10 @@ class AdvancedMockupStringExtractor():
                 metainfo = None
             self.check_text_unique(control_id, text, input_file)
             try:
-                new_text_element = TextElement(control_id, text, input_file, metainfo)
+                if self.faketranslation:
+                    new_text_element = TextElement(control_id, '#'+ self.faketranslation + '# ' + text + ' #' + self.faketranslation + '#', input_file, metainfo)
+                else:
+                    new_text_element = TextElement(control_id, text, input_file, metainfo)
                 if not self.element_should_be_ignored(control_id):
                     if new_text_element in self.texts:
                         pass
@@ -229,7 +236,7 @@ class AdvancedMockupStringExtractor():
                 self.check_text_unique(control_id, text, input_file)
                 try:
                     if not self.element_should_be_ignored(control_id):
-                        self.texts.append(TextElement(control_id+"_"+text.replace(' ', ''), text, input_file, metainfo, index))
+                        self.texts.append(TextElement(control_id + "_" + text.replace(' ', ''), text, input_file, metainfo, index))
                         index = index + 1
                 except AttributeError:
                     pass
@@ -314,6 +321,7 @@ if __name__ == "__main__":
 
     PARSER = argparse.ArgumentParser()
     PARSER.add_argument('-c', '--check', help='do not generate output, just check if all ids of testelements are given.', action='store_true')
+    PARSER.add_argument('--faketranslation', help='generate fake translation-output. Will add given parameter as prefix and postfix to every text in output-file')
     PARSER.add_argument('-i', '--input', help='input-file that will be read.')
     PARSER.add_argument('--json', help='write output in json-format instead of xml-format.', action='store_true')
     PARSER.add_argument('-min', '--minified', help='remove whitespaces from generated output.', action='store_true')
@@ -331,9 +339,11 @@ if __name__ == "__main__":
     if ARGUMENTS.verbose:
         logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
     if ARGUMENTS.input:
-        EXTRACTOR = AdvancedMockupStringExtractor(ARGUMENTS.input)
+        EXTRACTOR = AdvancedMockupStringExtractor(ARGUMENTS.input, fake=ARGUMENTS.faketranslation)
     else:
-        EXTRACTOR = AdvancedMockupStringExtractor()
+        EXTRACTOR = AdvancedMockupStringExtractor(fake=ARGUMENTS.faketranslation)
+    if ARGUMENTS.faketranslation:
+        EXTRACTOR.faketranslation = ARGUMENTS.faketranslation
     if ARGUMENTS.check:
         EXTRACTOR.check_ignored_texts()
         sys.exit(0)
