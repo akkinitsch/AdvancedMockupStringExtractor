@@ -88,7 +88,7 @@ With these option, the program will remove unneccessary whitespaces from the gen
 
     python AdvancedMockupStringExtractor.py -o outputfile.xml --min
 
-##Gernerating "fake-franslations"
+##Generating "fake-franslations"
 
 If you want to check the mechanismn of the translation-handling of your software beforethe real translation
 is done, the program can help you with that. It can export "faketranslation"-files, containing the texts of
@@ -102,4 +102,4 @@ The written file can be used for testing until the real translations are finishe
 * Adding option to search for mockup-files in directories recursively.
 * Choosing output-format depending on file-extension of output-file.
 * Extraction of unordered lists and conversion to html-format.
-* Eaxtraction of ordered -ists and conversion to html-format.
+* Extraction of ordered -ists and conversion to html-format.
