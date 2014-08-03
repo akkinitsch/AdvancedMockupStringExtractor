@@ -28,7 +28,7 @@ THE SOFTWARE.
 into XML-files that can be used as input for translation-memory-systems.
 """
 
-__version__ = "1.0.2"
+__version__ = "1.0.3"
 
 import argparse
 import glob
@@ -43,7 +43,7 @@ from OutputExporter import OutputExporter
 from TextElement import TextElement
 from TextFormatFixer import TextFormatFixer
 
-logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.WARNING)
+logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
 
 class AdvancedMockupStringExtractor():
     """Class handling the extracting-process of text from Mockup-files."""
@@ -154,30 +154,6 @@ class AdvancedMockupStringExtractor():
         else:
             return False
 
-    def check_text_unique(self, control_id, text, input_file):
-        """ Check if the text contained in an element is unique or already contained in another element.
-
-            Keyword arguments:
-            @param control_id: control-id of an element.
-            @param text: text contained in the element.
-            @param input_file: name of file containing the element.
-        """
-        if self.element_should_be_ignored(control_id):
-            return
-        for txt in self.texts:
-            if txt.identifier == control_id:
-                if txt.text == text:
-                    logging.error("\n\n#############################\nDouble entry:: %s\n\tControlId: %s\n\tText: %s<-> %s", input_file, control_id, text, txt.text)
-                    if txt.filename != input_file:
-                        logging.error("\n\tFile: %s\n\tControlId: %s\n\tText: %s <-> %s", txt.filename, txt.identifier, txt.text, text)
-                    continue
-                else:
-                    logging.error("\n\n#############################\nSame ControlId with different text:\n\tFile: %s\n\tControlId: %s\n\tText: %s<-> %s", input_file, control_id, text, txt.text)
-                    if txt.filename != input_file:
-                        logging.error("\n\tFile: %s\n\tControlId: %s\n\tText: %s <-> %s", txt.filename, txt.identifier, txt.text, text)
-                    continue
-
-
     def extract_element_info(self, element, input_file):
         """ Extract text from default mockup-elements (text, button etc.)
             Give error-message if there is already an element with same ID but different text.
@@ -199,7 +175,6 @@ class AdvancedMockupStringExtractor():
                 metainfo = self.substitute_formatingchars(self.get_control_property(control_properties, 'customData'))
             else:
                 metainfo = None
-            self.check_text_unique(control_id, text, input_file)
             try:
                 if self.faketranslation:
                     new_text_element = TextElement(control_id, '#'+ self.faketranslation + '# ' + text + ' #' + self.faketranslation + '#', input_file, metainfo)
@@ -233,7 +208,6 @@ class AdvancedMockupStringExtractor():
                 metainfo = None
             index = 0
             for text in texts:
-                self.check_text_unique(control_id, text, input_file)
                 try:
                     if not self.element_should_be_ignored(control_id):
                         self.texts.append(TextElement(control_id + "_" + text.replace(' ', ''), text, input_file, metainfo, index))
@@ -320,7 +294,7 @@ class AdvancedMockupStringExtractor():
 if __name__ == "__main__":
 
     PARSER = argparse.ArgumentParser()
-    PARSER.add_argument('-c', '--check', help='do not generate output, just check if all ids of testelements are given.', action='store_true')
+    PARSER.add_argument('-c', '--check', help='do not generate output, just check if all ids of textelements are given.', action='store_true')
     PARSER.add_argument('--faketranslation', help='generate fake translation-output. Will add given parameter as prefix and postfix to every text in output-file')
     PARSER.add_argument('-i', '--input', help='input-file that will be read.')
     PARSER.add_argument('--json', help='write output in json-format instead of xml-format.', action='store_true')

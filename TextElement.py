@@ -23,9 +23,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 '''
 
-""" Class that holds information about text extracted from mockup-files.
-"""
-
 class TextElement:
     """Class holding information of text-elements and their text."""
     # pylint: disable-msg=R0903
@@ -44,7 +41,12 @@ class TextElement:
         self.meta = metainfo
         self.index = index
 
+    def __eq__(self, other):
+        """Method that checks if two instances of this class are equal."""
+        if self.identifier != other.identifier or self.text != other.text or self.meta != other.meta or self.index != other.index:
+            return False
+        return True
+
     def __lt__(self, other):
-        """ Method used for sorting text-elements for export in output-file.
-        """
+        """ Method used for sorting text-elements for export in output-file."""
         return self.filename < other.filename
