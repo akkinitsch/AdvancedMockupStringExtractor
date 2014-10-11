@@ -50,7 +50,10 @@ class TextFormatFixer():
             Keyword arguments:
             @param text: Text that should be corrected.
         """
-        return text.strip()
+        try:
+            return text.strip()
+        except:
+            return ''
 
     @staticmethod
     def replace_html_whitespaces(text):
@@ -59,7 +62,10 @@ class TextFormatFixer():
             Keyword arguments:
             @param text: Text that should be corrected.
         """
-        return text.replace('%20', ' ')
+        try:
+            return text.replace('%20', ' ')
+        except:
+            return ''
 
     @staticmethod
     def remove_spaces_after_br(text):
@@ -68,4 +74,7 @@ class TextFormatFixer():
             Keyword arguments:
             @param text: Text that should be corrected.
         """
-        return re.sub(r'<br />[ ]*', '<br />', text)
+        try:
+            return re.sub(r'<br />[ ]*', '<br />', text)
+        except:
+            return ''
