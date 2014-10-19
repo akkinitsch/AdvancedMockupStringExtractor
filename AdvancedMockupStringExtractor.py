@@ -45,12 +45,12 @@ from TextFormatFixer import TextFormatFixer
 
 logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
 
+ControlElementsWithText = ["com.balsamiq.mockups::Label", "com.balsamiq.mockups::Paragraph", "com.balsamiq.mockups::TextArea", "com.balsamiq.mockups::TextInput", "com.balsamiq.mockups::SubTitle", "com.balsamiq.mockups::Button", "com.balsamiq.mockups::Accordion", "com.balsamiq.mockups::Tooltip", "com.balsamiq.mockups::IconLabel", "com.balsamiq.mockups::ComboBox", "com.balsamiq.mockups::ButtonBar", "com.balsamiq.mockups::CheckBox", "com.balsamiq.mockups::Link"]
+# pylint: disable-msg=W0105
+"""List of names of mockup-elements containing text."""
+
 class AdvancedMockupStringExtractor():
     """Class handling the extracting-process of text from Mockup-files."""
-
-    controlElementsWithText = ["com.balsamiq.mockups::Label", "com.balsamiq.mockups::Paragraph", "com.balsamiq.mockups::TextArea", "com.balsamiq.mockups::TextInput", "com.balsamiq.mockups::SubTitle", "com.balsamiq.mockups::Button", "com.balsamiq.mockups::Accordion", "com.balsamiq.mockups::Tooltip", "com.balsamiq.mockups::IconLabel", "com.balsamiq.mockups::ComboBox", "com.balsamiq.mockups::ButtonBar", "com.balsamiq.mockups::CheckBox", "com.balsamiq.mockups::Link"]
-    # pylint: disable-msg=W0105
-    """List of names of mockup-elements containing text."""
 
     texts = []
     """List with all recognized text in balsamiq-objects."""
@@ -162,7 +162,7 @@ class AdvancedMockupStringExtractor():
             @param element: xml-element from mockup-file.
             @param input_file: name of input-file.
         """
-        if element.attrib["controlTypeID"] not in self.controlElementsWithText:
+        if element.attrib["controlTypeID"] not in ControlElementsWithText:
             return
         if element.attrib["controlTypeID"] == "com.balsamiq.mockups::ButtonBar":
             return self.extract_text_from_buttonbar(element, input_file)
