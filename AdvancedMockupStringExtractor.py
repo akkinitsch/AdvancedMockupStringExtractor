@@ -48,7 +48,7 @@ logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
 class AdvancedMockupStringExtractor():
     """Class handling the extracting-process of text from Mockup-files."""
 
-    controlElementsWithText = ["com.balsamiq.mockups::Label", "com.balsamiq.mockups::Paragraph", "com.balsamiq.mockups::TextArea", "com.balsamiq.mockups::TextInput", "com.balsamiq.mockups::SubTitle", "com.balsamiq.mockups::Button", "com.balsamiq.mockups::Accordion", "com.balsamiq.mockups::Tooltip", "com.balsamiq.mockups::IconLabel", "com.balsamiq.mockups::ComboBox", "com.balsamiq.mockups::ButtonBar", "com.balsamiq.mockups::CheckBox", "com.balsamiq.mockups::Link"]
+    controlElementsWithText = ["com.balsamiq.mockups::Label", "com.balsamiq.mockups::Paragraph", "com.balsamiq.mockups::TextArea", "com.balsamiq.mockups::TextInput", "com.balsamiq.mockups::SubTitle", "com.balsamiq.mockups::Button", "com.balsamiq.mockups::RadioButton", "com.balsamiq.mockups::Accordion", "com.balsamiq.mockups::Tooltip", "com.balsamiq.mockups::IconLabel", "com.balsamiq.mockups::ComboBox", "com.balsamiq.mockups::ButtonBar", "com.balsamiq.mockups::CheckBox", "com.balsamiq.mockups::Link"]
     # pylint: disable-msg=W0105
     """List of names of mockup-elements containing text."""
 
