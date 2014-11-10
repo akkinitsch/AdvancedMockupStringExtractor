@@ -65,7 +65,7 @@ class AdvancedMockupStringExtractor():
     """Pattern of regular expression that will be used to determine if a text containes list-items."""
 
 
-    def __init__(self, input_file=None, fake=None):
+    def __init__(self, input_file=None, fake=None, force=False):
         """ Constructor.
             If input_file is given, only this file will be parsed. Otherwise all bmml-files in directory and subdirectories
             will be parsed.
@@ -74,6 +74,7 @@ class AdvancedMockupStringExtractor():
         """
         self.input_file = input_file
         self.faketranslation = fake
+        self.force = force
         if input_file:
             try:
                 self.extract_text(input_file)
@@ -93,7 +94,14 @@ class AdvancedMockupStringExtractor():
             @param input_file: mockup-file that should be parsed for texts.
         """
         logging.info("Extracting text from file " + input_file)
-        tree = etree.parse(input_file)
+        try:
+            tree = etree.parse(input_file)
+        except etree.XMLSyntaxError:
+            logging.error("XML syntaxerror in file " + input_file)
+            if self.force:
+                return
+            else:
+                sys.exit(-1)
         root = tree.getroot()
         for element in root.iter():
             try:
@@ -296,6 +304,7 @@ if __name__ == "__main__":
     PARSER = argparse.ArgumentParser()
     PARSER.add_argument('-c', '--check', help='do not generate output, just check if all ids of textelements are given.', action='store_true')
     PARSER.add_argument('--faketranslation', help='generate fake translation-output. Will add given parameter as prefix and postfix to every text in output-file')
+    PARSER.add_argument('-f', '--force', help='force generating outpu-file even if errors occure.', action='store_true')
     PARSER.add_argument('-i', '--input', help='input-file that will be read.')
     PARSER.add_argument('--json', help='write output in json-format instead of xml-format.', action='store_true')
     PARSER.add_argument('-min', '--minified', help='remove whitespaces from generated output.', action='store_true')
@@ -313,7 +322,7 @@ if __name__ == "__main__":
     if ARGUMENTS.verbose:
         logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
     if ARGUMENTS.input:
-        EXTRACTOR = AdvancedMockupStringExtractor(ARGUMENTS.input, fake=ARGUMENTS.faketranslation)
+        EXTRACTOR = AdvancedMockupStringExtractor(ARGUMENTS.input, fake=ARGUMENTS.faketranslation, force=ARGUMENTS.force)
     else:
         EXTRACTOR = AdvancedMockupStringExtractor(fake=ARGUMENTS.faketranslation)
     if ARGUMENTS.faketranslation:
