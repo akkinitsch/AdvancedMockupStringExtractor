@@ -173,7 +173,7 @@ class AdvancedMockupStringExtractor():
         """
         for prop in element:
             id = self.get_control_id(prop, input_file)
-            if id and id != "ignore":
+            if id and not self.element_should_be_ignored(id):
                 logging.warning("Element with ID should have no text\n\tID: %s\n\tcontrolType: %s\n\tfile: %s\n", id, element.attrib["controlTypeID"], input_file)
                 if not self.force:
                     sys.exit(-1)
