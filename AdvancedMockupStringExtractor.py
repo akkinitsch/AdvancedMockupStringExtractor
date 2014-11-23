@@ -43,7 +43,7 @@ from OutputExporter import OutputExporter
 from TextElement import TextElement
 from TextFormatFixer import TextFormatFixer
 
-logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
+logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.WARNING)
 
 class AdvancedMockupStringExtractor():
     """Class handling the extracting-process of text from Mockup-files."""
@@ -130,8 +130,9 @@ class AdvancedMockupStringExtractor():
         """
         result = self.get_control_property(control_properties, 'customID')
         if not result:
-            logging.error("\tElement without custom id in file %s\n\tText in element: %s", input_file, self.get_text(control_properties))
-            sys.exit(-1)
+            #logging.error("\tElement without custom id in file %s\n\tText in element: %s", input_file, self.get_text(control_properties))
+            #sys.exit(-1) #TODO hier weitermachen
+            return False
         return result
 
     def get_text(self, control_properties):
@@ -162,6 +163,21 @@ class AdvancedMockupStringExtractor():
         else:
             return False
 
+    def checkElementWithoutText(self, element, input_file):
+        """ Check if an element that does not have text that should be translated has got an id.
+            For example this can happen if the user gives the id to a group of elements containing the
+            element with text instead of giving the id to the element with text.
+
+            If there is an element that has an id but should have no text, the program is aborted with a warning
+            if the force-flag is not set to true.
+        """
+        for prop in element:
+            id = self.get_control_id(prop, input_file)
+            if id and id != "ignore":
+                logging.warning("Element with ID should have no text\n\tID: %s\n\tcontrolType: %s\n\tfile: %s\n", id, element.attrib["controlTypeID"], input_file)
+                if not self.force:
+                    sys.exit(-1)
+
     def extract_element_info(self, element, input_file):
         """ Extract text from default mockup-elements (text, button etc.)
             Give error-message if there is already an element with same ID but different text.
@@ -171,6 +187,7 @@ class AdvancedMockupStringExtractor():
             @param input_file: name of input-file.
         """
         if element.attrib["controlTypeID"] not in self.controlElementsWithText:
+            self.checkElementWithoutText(element, input_file)
             return
         if element.attrib["controlTypeID"] == "com.balsamiq.mockups::ButtonBar":
             return self.extract_text_from_buttonbar(element, input_file)
@@ -321,10 +338,12 @@ if __name__ == "__main__":
         sys.exit(-1)
     if ARGUMENTS.verbose:
         logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
+    if ARGUMENTS.force:
+        force = True
     if ARGUMENTS.input:
         EXTRACTOR = AdvancedMockupStringExtractor(ARGUMENTS.input, fake=ARGUMENTS.faketranslation, force=ARGUMENTS.force)
     else:
-        EXTRACTOR = AdvancedMockupStringExtractor(fake=ARGUMENTS.faketranslation)
+        EXTRACTOR = AdvancedMockupStringExtractor(fake=ARGUMENTS.faketranslation, force=ARGUMENTS.force)
     if ARGUMENTS.faketranslation:
         EXTRACTOR.faketranslation = ARGUMENTS.faketranslation
     if ARGUMENTS.check:
