@@ -206,6 +206,7 @@ class AdvancedMockupStringExtractor():
                 else:
                     new_text_element = TextElement(control_id, text, input_file, metainfo)
                 if not self.element_should_be_ignored(control_id):
+                    self.checkElementIdUnique(new_text_element)
                     if new_text_element in self.texts:
                         pass
                     else:
@@ -214,6 +215,16 @@ class AdvancedMockupStringExtractor():
                     self.ignored.append(new_text_element)
             except AttributeError:
                 pass
+
+    def checkElementIdUnique(self, newElement):
+        """ Check if an element with same ID was already extracted. If so, check if texts of both elements are the same.
+            If the texts are not the same, exit program with an error-message.
+        """
+        for oldElement in self.texts:
+            if oldElement.identifier == newElement.identifier and oldElement.text != newElement.text:
+                logging.error("Element has got same ID but different text like other element: \n\tID: %s\n\ttext: %s\n\tfilename: %s\n\n\tID: %s\n\ttext: %s\n\tfilename: %s", newElement.identifier, newElement.text, newElement.filename, oldElement.identifier, oldElement.text, oldElement.filename)
+                if not self.force:
+                    sys.exit(-1)
 
     def get_text_from_combined_element(self, element, input_file, seperator):
         """ Extracts texts from element holding more than one text. TextElements will return an index to make sure that
