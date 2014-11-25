@@ -58,7 +58,7 @@ class AdvancedMockupStringExtractor():
     ignored = []
     """List with ignored texts in balsamiq-objects."""
 
-    IgnoreTag = "IGNORE"
+    IgnoreTags = ["IGNORE", "IGNOREEXCLUDE"]
     """Tag indicating that element in balsamiq-file should be ignored."""
 
     listItemPattern = re.compile('\*%20[a-zA-z0-9 ]*(%0A){0,1}')
@@ -158,7 +158,7 @@ class AdvancedMockupStringExtractor():
             Keyword arguments:
             @param control_id: control-id of an element.
         """
-        if control_id.upper() == self.IgnoreTag:
+        if control_id.upper() in self.IgnoreTags:
             return True
         else:
             return False
