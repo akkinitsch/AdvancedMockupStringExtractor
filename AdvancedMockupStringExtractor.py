@@ -43,7 +43,7 @@ from OutputExporter import OutputExporter
 from TextElement import TextElement
 from TextFormatFixer import TextFormatFixer
 
-logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.WARNING)
+logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
 
 class AdvancedMockupStringExtractor():
     """Class handling the extracting-process of text from Mockup-files."""
@@ -65,23 +65,22 @@ class AdvancedMockupStringExtractor():
     """Pattern of regular expression that will be used to determine if a text containes list-items."""
 
 
-    def __init__(self, input_file=None, fake=None, force=False):
+    def __init__(self, input_file_dir=None, fake=None, force=False):
         """ Constructor.
             If input_file is given, only this file will be parsed. Otherwise all bmml-files in directory and subdirectories
             will be parsed.
 
-            @param input_file: file that should be parsed (default None)
+            @param input_file_dir: file or directory that should be parsed (default None)
         """
-        self.input_file = input_file
         self.faketranslation = fake
         self.force = force
-        if input_file:
-            self.extract_text(input_file)
+        if input_file_dir:
+            if os.path.isfile(input_file_dir):
+                self.extract_text(input_file_dir)
+            else:
+                self.extract_text_from_directory(input_file_dir)
         else:
-            for infile in glob.glob(os.path.join(".", '*.bmml')):
-                self.extract_text(infile)
-            for infile in glob.glob(os.path.join("./assets", '*.bmml')):
-                self.extract_text(infile)
+            self.extract_text_from_directory(".")
 
 
     def extract_text(self, input_file):
@@ -105,6 +104,13 @@ class AdvancedMockupStringExtractor():
                 self.extract_element_info(element, input_file)
             except KeyError:
                 pass
+
+    def extract_text_from_directory(self, input_path):
+        logging.debug("In extract_text_from_directory")
+        for infile in glob.glob(os.path.join(input_path, '*.bmml')):
+                self.extract_text(infile)
+        for infile in glob.glob(os.path.join(input_path + "/assets", '*.bmml')):
+                self.extract_text(infile)
 
     def get_control_property(self, control_properties, tag):
         """ Return the text contained in an element-property with tag-element tag.
@@ -330,7 +336,7 @@ if __name__ == "__main__":
     PARSER.add_argument('-c', '--check', help='do not generate output, just check if all ids of textelements are given.', action='store_true')
     PARSER.add_argument('--faketranslation', help='generate fake translation-output. Will add given parameter as prefix and postfix to every text in output-file')
     PARSER.add_argument('-f', '--force', help='force generating outpu-file even if errors occure.', action='store_true')
-    PARSER.add_argument('-i', '--input', help='input-file that will be read.')
+    PARSER.add_argument('-i', '--input', help='input-file or directory that will be read. When directory is given, all mockup-files in directory will be read.')
     PARSER.add_argument('--json', help='write output in json-format instead of xml-format.', action='store_true')
     PARSER.add_argument('-min', '--minified', help='remove whitespaces from generated output.', action='store_true')
     PARSER.add_argument('-o', '--output', help='name of file that will contain the generated output.')
