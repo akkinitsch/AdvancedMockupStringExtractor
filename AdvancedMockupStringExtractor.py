@@ -76,10 +76,7 @@ class AdvancedMockupStringExtractor():
         self.faketranslation = fake
         self.force = force
         if input_file:
-            try:
-                self.extract_text(input_file)
-            except etree.XMLSyntaxError:
-                logging.error('Syntax error in file %s', input_file)
+            self.extract_text(input_file)
         else:
             for infile in glob.glob(os.path.join(".", '*.bmml')):
                 self.extract_text(infile)
