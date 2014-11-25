@@ -43,7 +43,7 @@ from OutputExporter import OutputExporter
 from TextElement import TextElement
 from TextFormatFixer import TextFormatFixer
 
-logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
+logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.WARNING)
 
 class AdvancedMockupStringExtractor():
     """Class handling the extracting-process of text from Mockup-files."""
@@ -106,7 +106,6 @@ class AdvancedMockupStringExtractor():
                 pass
 
     def extract_text_from_directory(self, input_path):
-        logging.debug("In extract_text_from_directory")
         for infile in glob.glob(os.path.join(input_path, '*.bmml')):
                 self.extract_text(infile)
         for infile in glob.glob(os.path.join(input_path + "/assets", '*.bmml')):
