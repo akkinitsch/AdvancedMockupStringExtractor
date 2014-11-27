@@ -48,7 +48,7 @@ logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.WARNING)
 class AdvancedMockupStringExtractor():
     """Class handling the extracting-process of text from Mockup-files."""
 
-    controlElementsWithText = ["com.balsamiq.mockups::Label", "com.balsamiq.mockups::Paragraph", "com.balsamiq.mockups::TextArea", "com.balsamiq.mockups::TextInput", "com.balsamiq.mockups::SubTitle", "com.balsamiq.mockups::Button", "com.balsamiq.mockups::RadioButton", "com.balsamiq.mockups::Accordion", "com.balsamiq.mockups::Tooltip", "com.balsamiq.mockups::IconLabel", "com.balsamiq.mockups::ComboBox", "com.balsamiq.mockups::ButtonBar", "com.balsamiq.mockups::CheckBox", "com.balsamiq.mockups::Link"]
+    controlElementsWithText = ["com.balsamiq.mockups::Label", "com.balsamiq.mockups::Paragraph", "com.balsamiq.mockups::TextArea", "com.balsamiq.mockups::TextInput", "com.balsamiq.mockups::SubTitle", "com.balsamiq.mockups::Button", "com.balsamiq.mockups::RadioButton", "com.balsamiq.mockups::Accordion", "com.balsamiq.mockups::Tooltip", "com.balsamiq.mockups::IconLabel", "com.balsamiq.mockups::ComboBox", "com.balsamiq.mockups::ButtonBar", "com.balsamiq.mockups::TabBar", "com.balsamiq.mockups::CheckBox", "com.balsamiq.mockups::Link"]
     # pylint: disable-msg=W0105
     """List of names of mockup-elements containing text."""
 
@@ -191,8 +191,8 @@ class AdvancedMockupStringExtractor():
         if element.attrib["controlTypeID"] not in self.controlElementsWithText:
             self.checkElementWithoutText(element, input_file)
             return
-        if element.attrib["controlTypeID"] == "com.balsamiq.mockups::ButtonBar":
-            return self.extract_text_from_buttonbar(element, input_file)
+        if element.attrib["controlTypeID"] == "com.balsamiq.mockups::ButtonBar" or element.attrib["controlTypeID"] == "com.balsamiq.mockups::TabBar":
+            return self.extract_text_from_buttonbar_tabbar(element, input_file)
         elif element.attrib["controlTypeID"] == "com.balsamiq.mockups::ComboBox":
             return self.extract_text_from_combobox(element, input_file)
         for control_properties in element:
@@ -254,10 +254,10 @@ class AdvancedMockupStringExtractor():
                     pass
 
 
-    def extract_text_from_buttonbar(self, element, input_file):
-        """Extracts texts from buttonbar-elements and append them to self.texts.
-        The appended elements will have an index to be able to distinguish the elements of the buttonbar and to
-        know the order they are contained in the buttonbar.
+    def extract_text_from_buttonbar_tabbar(self, element, input_file):
+        """Extracts texts from buttonbar- and tabbar-elements and append them to self.texts.
+        The appended elements will have an index to be able to distinguish the elements of the buttonbar/tabbar and to
+        know the order they are contained in the buttonbar/tabbar.
         """
         self.get_text_from_combined_element(element, input_file, '%2C')
 
