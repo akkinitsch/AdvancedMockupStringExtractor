@@ -92,6 +92,7 @@ class AdvancedMockupStringExtractorTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    TESTSUITE = unittest.TestLoader().loadTestsFromTestCase(AdvancedMockupStringExtractorTest)
-    unittest.TextTestRunner(verbosity=1).run(TESTSUITE)
-
+    #TESTSUITE = unittest.TestLoader().loadTestsFromTestCase(AdvancedMockupStringExtractorTest)
+    #unittest.TextTestRunner(verbosity=1).run(TESTSUITE)
+    import xmlrunner
+    unittest.main(testRunner=xmlrunner.XMLTestRunner(output='test-reports'))
